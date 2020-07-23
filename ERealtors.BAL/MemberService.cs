@@ -10,14 +10,21 @@ namespace ERealtors.BAL
 {
     public class MemberService
     {
-        public static string GetMemberList()
+        public static ApplicationResultModel GetMemberList()
         {
-            return MemberData.GetMemberList();
+            var result = MemberData.GetMemberList();
+            return new ApplicationResultModel() { Success = true, Result = result.Result };
         }
 
         public static ApplicationResultModel GetMemberById(int memberId)
         {
             var result = MemberData.GetMemberById(memberId);
+            return new ApplicationResultModel() { Success = true, Result = result.Result };
+        }
+
+        public static ApplicationResultModel GetSponserList()
+        {
+            var result = MemberData.GetSponserList();
             return new ApplicationResultModel() { Success = true, Result = result.Result };
         }
 

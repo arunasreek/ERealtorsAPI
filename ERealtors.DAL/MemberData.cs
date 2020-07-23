@@ -16,9 +16,37 @@ namespace ERealtors.DAL
     public class MemberData
     {
         static string str = ConfigurationManager.ConnectionStrings["constr"].ConnectionString;
-        public static string GetMemberList()
+        public static ApplicationResultModel GetMemberList()
         {
-            return "Hi";
+            try
+            {
+                List<RealtorsMemberBasicData> lstEdu = new List<RealtorsMemberBasicData>();
+                using (SqlDataReader dr = SqlHelper.ExecuteReader(str, CommandType.StoredProcedure, "usp_Customers_List"))
+                {
+                    DataTable dt = new DataTable();
+                    dt.Load(dr);
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        lstEdu.Add(new RealtorsMemberBasicData
+                        {
+                            Id= DataBase.Turn<int>(row["Id"]),
+                            Guid = DataBase.Turn<string>(row["Ftiwp_GUID"]),
+                            Member = DataBase.Turn<string>(row["Member"]),
+                            Sponser = DataBase.Turn<string>(row["Sponsor_Name"]),
+                            Star = DataBase.Turn<int>(row["Star_Level"]),
+                            Join_Date = DataBase.Turn<DateTime>(row["Joined_Date"]),
+                            AutoPool = DataBase.Turn<int>(row["Autopool_Level"])
+
+                        });
+                    }
+                    dr.Close();
+                }
+                return new ApplicationResultModel() { Success = true, Result = lstEdu };
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public static ApplicationResultModel GetMemberById(int memberId)
@@ -70,25 +98,79 @@ namespace ERealtors.DAL
 
         public static ApplicationResultModel SetMemberData(MembersModel setErealtors)
         {
-            List<SqlParameter> objParamInfo = new List<SqlParameter>
+            try
             {
-                new SqlParameter("@Name", setErealtors.Name),
-                new SqlParameter("@RefId", setErealtors.RefId),
-                new SqlParameter("@plot_sqyds", setErealtors.plot_sqyds),
-                new SqlParameter("@no_of_plots", setErealtors.no_of_plots),
-                new SqlParameter("@rate_per_plot", setErealtors.rate_per_plot),
-                new SqlParameter("@address", setErealtors.address),
-                new SqlParameter("@perks", setErealtors.perks),
+                List<SqlParameter> objParamInfo = new List<SqlParameter>
+            {
+                new SqlParameter("@Country", setErealtors.Country),
+                new SqlParameter("@First_Name", setErealtors.First_Name),
+                new SqlParameter("@Surname", setErealtors.Surname),
+                new SqlParameter("@Username", setErealtors.Username),
+                new SqlParameter("@Email_Address", setErealtors.Email_Address),
+                new SqlParameter("@Date_of_Joining", setErealtors.Date_of_Joining),
+                new SqlParameter("@Date_of_Birth", setErealtors.Date_of_Birth),
+                new SqlParameter("@Plot_SQYDS", setErealtors.plot_sqyds),
+                new SqlParameter("@No_of_plots", setErealtors.no_of_plots),
+                new SqlParameter("@Rate_per_plot", setErealtors.rate_per_plot),
+                new SqlParameter("@Perks", setErealtors.perks),
+                new SqlParameter("@Password", setErealtors.Password),
+                new SqlParameter("@Confirm_Password", setErealtors.Confirm_Password),
+                new SqlParameter("@Sponsor", setErealtors.Sponsor),
+                new SqlParameter("@Name_of_Nominee", setErealtors.Name_of_Nominee),
+                new SqlParameter("@Mobile_Number", setErealtors.Mobile_Number),
+                new SqlParameter("@Address", setErealtors.address),
+                new SqlParameter("@Pan_Card_Number", setErealtors.Pan_Card_Number),
+                new SqlParameter("@Aadhaar_Number", setErealtors.Aadhaar_Number),
+                new SqlParameter("@Bank_Name", setErealtors.Bank_Name),
+                new SqlParameter("@IFSC_Code", setErealtors.IFSC_Code),
+                new SqlParameter("@Bank_Account_Number", setErealtors.Bank_Account_Number),
+                new SqlParameter("@IsOptingforStar1Autopool", setErealtors.IsOptingforStar1Autopool),
+                new SqlParameter("@UpgradeAmountPaid", setErealtors.UpgradeAmountPaid),
             };
 
-            using (SqlDataReader dr = SqlHelper.ExecuteReader(str, CommandType.StoredProcedure, "usp_Add_Customer", objParamInfo.ToArray()))
+                using (SqlDataReader dr = SqlHelper.ExecuteReader(str, CommandType.StoredProcedure, "usp_Add_Ftiwp_Customer", objParamInfo.ToArray()))
+                {
+                    DataTable dt = new DataTable();
+                    dt.Load(dr);
+                    dr.Close();
+                }
+
+                return new ApplicationResultModel() { Success = true };
+            }
+            catch (Exception ex)
             {
-                DataTable dt = new DataTable();
-                dt.Load(dr);
-                dr.Close();
+
+                throw ex;
+            }
+        }
+    
+    
+        public static ApplicationResultModel GetSponserList()
+        {
+            try
+            {
+                List<RealtorsSponserList> lstSponser = new List<RealtorsSponserList>();
+                using (SqlDataReader dr = SqlHelper.ExecuteReader(str, CommandType.StoredProcedure, "usp_Id_as_GUID"))
+                {
+                    DataTable dt = new DataTable();
+                    dt.Load(dr);
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        lstSponser.Add(new RealtorsSponserList
+                        {
+                            SponserId = DataBase.Turn<int>(row["id"]),
+                            SponserValue = DataBase.Turn<string>(row["Ftiwp_GUID"])
+                        });
+                    }
+                    dr.Close();
+                }
+                return new ApplicationResultModel() { Success = true, Result = lstSponser };
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
 
-            return new ApplicationResultModel() { Success = true};
         }
     }
 }

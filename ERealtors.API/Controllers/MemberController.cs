@@ -14,18 +14,26 @@ namespace ERealtors.API.Controllers
     {
         [HttpGet]
         [Route("GetMemberList")]
-        public string GetUsersList()
+        public HttpResponseMessage GetUsersList()
         {
             var result = MemberService.GetMemberList();
-            return result;
+            return Request.CreateResponse(HttpStatusCode.OK, new ApplicationResultModel { Success = true, Result = result.Result });
         }
 
         [HttpPost]
         [Route("PostMemberData")]
         public HttpResponseMessage PostMemberData(MembersModel membersModel)
         {
-            var respnse = MemberService.SetMemberData(membersModel);
-            return Request.CreateResponse(HttpStatusCode.OK, new ApplicationResultModel { Success = true,Result= respnse });
+            var response = MemberService.SetMemberData(membersModel);
+            return Request.CreateResponse(HttpStatusCode.OK, new ApplicationResultModel { Success = true,Result= response });
+        }
+
+        [HttpGet]
+        [Route("GetSponserList")]
+        public HttpResponseMessage GetSponserList()
+        {
+            var result = MemberService.GetSponserList();
+            return Request.CreateResponse(HttpStatusCode.OK, new ApplicationResultModel { Success = true, Result = result.Result });
         }
 
         [HttpGet]

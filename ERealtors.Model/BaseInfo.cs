@@ -32,5 +32,23 @@ namespace ERealtors.Model
             public string Total_Income { get; set; }
             public string Net_Eligibility_Amt { get; set; }
         }
+
+        public class RealtorsSponserList
+        {
+            public int SponserId { get; set; }
+            public string SponserValue { get; set; }
+
+        }
+        
+        public class RealtorsMemberBasicData
+        {
+            public int Id { get; set; }
+            public string Guid { get; set; }
+            public string Member { get; set; }
+            public int Star { get; set; }
+            public string Sponser { get; set; }
+            public DateTime Join_Date { get; set; }
+            public int AutoPool { get; set; }
+        }
     }
 }
