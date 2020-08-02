@@ -16,26 +16,55 @@ namespace ERealtors.DAL
     public class MemberData
     {
         static string str = ConfigurationManager.ConnectionStrings["constr"].ConnectionString;
-        public static ApplicationResultModel GetMemberList()
+        public static ApplicationResultModel GetMemberList(string Action, int? Id)
         {
             try
             {
-                List<RealtorsMemberBasicData> lstEdu = new List<RealtorsMemberBasicData>();
-                using (SqlDataReader dr = SqlHelper.ExecuteReader(str, CommandType.StoredProcedure, "usp_Customers_List"))
+                List<MembersModel> lstEdu = new List<MembersModel>();
+                List<SqlParameter> objParamInfo = new List<SqlParameter>();
+                objParamInfo.Add(new SqlParameter("@Action", Action));
+                objParamInfo.Add(new SqlParameter("@Id", Id));
+                using (SqlDataReader dr = SqlHelper.ExecuteReader(str, CommandType.StoredProcedure, "usp_Customers_List", objParamInfo.ToArray()))
                 {
                     DataTable dt = new DataTable();
                     dt.Load(dr);
                     foreach (DataRow row in dt.Rows)
                     {
-                        lstEdu.Add(new RealtorsMemberBasicData
+                        lstEdu.Add(new MembersModel
                         {
-                            Id= DataBase.Turn<int>(row["Id"]),
+                            Id = DataBase.Turn<int>(row["Id"]),
                             Guid = DataBase.Turn<string>(row["Ftiwp_GUID"]),
                             Member = DataBase.Turn<string>(row["Member"]),
                             Sponser = DataBase.Turn<string>(row["Sponsor_Name"]),
+                            Gender = DataBase.Turn<string>(row["Gender"]),
                             Star = DataBase.Turn<int>(row["Star_Level"]),
                             Join_Date = DataBase.Turn<DateTime>(row["Joined_Date"]),
-                            AutoPool = DataBase.Turn<int>(row["Autopool_Level"])
+                            AutoPool = DataBase.Turn<int>(row["Autopool_Level"]),
+                            Password = DataBase.Turn<string>(row["Password"]),
+                            Confirm_Password = DataBase.Turn<string>(row["Confirm_Password"]),
+                            no_of_plots = DataBase.Turn<int>(row["No_of_plots"]),
+                            rate_per_plot = DataBase.Turn<int>(row["Rate_per_plot"]),
+                            plot_sqyds = DataBase.Turn<int>(row["Plot_SQYDS"]),
+                            address = DataBase.Turn<string>(row["Address"]),
+                            First_Name = DataBase.Turn<string>(row["First_Name"]),
+                            Surname =  DataBase.Turn<string>(row["Surname"]),
+                            Username = DataBase.Turn<string>(row["Username"]),
+                            Email_Address = DataBase.Turn<string>(row["Email_Address"]),
+                            Date_of_Joining = DataBase.Turn<DateTime>(row["Date_of_Joining"]),
+                            Date_of_Birth = DataBase.Turn<DateTime>(row["Date_of_Birth"]),
+                            perks = DataBase.Turn<string>(row["Perks"]),
+                            Sponsor = DataBase.Turn<int>(row["Sponsor"]),
+                            Name_of_Nominee = DataBase.Turn<string>(row["Name_of_Nominee"]),
+                            Mobile_Number = DataBase.Turn<string>(row["Mobile_Number"]),
+                            Pan_Card_Number = DataBase.Turn<string>(row["Pan_Card_Number"]),
+                            Aadhaar_Number = DataBase.Turn<string>(row["Aadhaar_Number"]),
+                            Bank_Name = DataBase.Turn<string>(row["Bank_Name"]),
+                            IFSC_Code = DataBase.Turn<string>(row["IFSC_Code"]),
+                            Bank_Account_Number = DataBase.Turn<string>(row["Bank_Account_Number"]),
+                            IsOptingforStar1Autopool = DataBase.Turn<int>(row["IsOptingforStar1Autopool"]),
+                            UpgradeAmountPaid = DataBase.Turn<int>(row["UpgradeAmountPaid"]),
+                            ImageUrl = DataBase.Turn<string>(row["image"]),
+                            IsAdmin = DataBase.Turn<int>(row["IsAdmin"]),
 
                         });
                     }
@@ -49,12 +78,13 @@ namespace ERealtors.DAL
             }
         }
 
-        public static ApplicationResultModel GetMemberById(int memberId)
+        public static ApplicationResultModel GetMemberById(int memberId, string MonYear)
         {
             try
             {
                 List<SqlParameter> objParamInfo = new List<SqlParameter>();
                 objParamInfo.Add(new SqlParameter("@Id", memberId));
+                objParamInfo.Add(new SqlParameter("@MonYear", MonYear));
                 List<RealtorsMemberData> lstEdu = new List<RealtorsMemberData>();
                 using (SqlDataReader dr = SqlHelper.ExecuteReader(str, CommandType.StoredProcedure, "usp_Customers_Report", objParamInfo.ToArray()))
                 {
@@ -83,7 +113,8 @@ namespace ERealtors.DAL
                             Total = DataBase.Turn<string>(row["Total"]),
                             Deduction = DataBase.Turn<string>(row["Deduction"]),
                             Total_Income = DataBase.Turn<string>(row["Total_Income"]),
-                            Net_Eligibility_Amt = DataBase.Turn<string>(row["Net_Eligibility_Amount"])
+                            Net_Eligibility_Amt = DataBase.Turn<string>(row["Net_Eligibility_Amount"]),
+                            Image = DataBase.Turn<string>(row["Image"]),
                         });
                     }
                     dr.Close();
@@ -102,8 +133,10 @@ namespace ERealtors.DAL
             {
                 List<SqlParameter> objParamInfo = new List<SqlParameter>
             {
-                new SqlParameter("@Country", setErealtors.Country),
+                new SqlParameter("@Action", setErealtors.ActionTaken),
+                new SqlParameter("@Id", setErealtors.Id),
                 new SqlParameter("@First_Name", setErealtors.First_Name),
+                new SqlParameter("@Gender", setErealtors.Gender),
                 new SqlParameter("@Surname", setErealtors.Surname),
                 new SqlParameter("@Username", setErealtors.Username),
                 new SqlParameter("@Email_Address", setErealtors.Email_Address),
@@ -126,16 +159,26 @@ namespace ERealtors.DAL
                 new SqlParameter("@Bank_Account_Number", setErealtors.Bank_Account_Number),
                 new SqlParameter("@IsOptingforStar1Autopool", setErealtors.IsOptingforStar1Autopool),
                 new SqlParameter("@UpgradeAmountPaid", setErealtors.UpgradeAmountPaid),
+                new SqlParameter("@Image", setErealtors.ImageUrl),
+                new SqlParameter("@IsAdmin", setErealtors.IsAdmin)
             };
+                string RHID = "";
 
-                using (SqlDataReader dr = SqlHelper.ExecuteReader(str, CommandType.StoredProcedure, "usp_Add_Ftiwp_Customer", objParamInfo.ToArray()))
+                using (SqlDataReader dr = SqlHelper.ExecuteReader(str, CommandType.StoredProcedure, "usp_IU_Ftiwp_Customer", objParamInfo.ToArray()))
                 {
                     DataTable dt = new DataTable();
                     dt.Load(dr);
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            if (setErealtors.ActionTaken == "Insert")
+                            {
+                                RHID = DataBase.Turn<string>(row["GUID"]);
+                            }
+                        }
                     dr.Close();
                 }
 
-                return new ApplicationResultModel() { Success = true };
+                 return new ApplicationResultModel() { Success = true,Result= RHID };
             }
             catch (Exception ex)
             {
@@ -172,5 +215,71 @@ namespace ERealtors.DAL
             }
 
         }
+
+        public static ApplicationResultModel GetBusinessTransactions()
+        {
+            try
+            {
+                List<BusinessTransactions> businessTransactions = new List<BusinessTransactions>();
+                using (SqlDataReader dr = SqlHelper.ExecuteReader(str, CommandType.StoredProcedure, "usp_business_transactions"))
+                {
+                    DataTable dt = new DataTable();
+                    dt.Load(dr);
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        businessTransactions.Add(new BusinessTransactions
+                        {
+                            Category = DataBase.Turn<string>(row["Category"]),
+                            Member = DataBase.Turn<string>(row["Member"]),
+                            SponsorName = DataBase.Turn<string>(row["SponsorName"]),
+                            Amount = DataBase.Turn<int>(row["Amount"]),
+                            TransactionDate = DataBase.Turn<DateTime>(row["TransactionDate"])
+                        });
+                    }
+                    dr.Close();
+                }
+                return new ApplicationResultModel() { Success = true, Result = businessTransactions };
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static ApplicationResultModel GetMemberRanks()
+        {
+            try
+            {
+                List<MemberRank> memberRanks = new List<MemberRank>();
+                using (SqlDataReader dr = SqlHelper.ExecuteReader(str, CommandType.StoredProcedure, "usp_Members_Rank"))
+                {
+                    DataTable dt = new DataTable();
+                    dt.Load(dr);
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        memberRanks.Add(new MemberRank
+                        {
+                            MemberName = DataBase.Turn<string>(row["MemberName"]),
+                            Month = DataBase.Turn<string>(row["Month"]),
+                            Year = DataBase.Turn<string>(row["Year"]),
+                            Sponsor_Name = DataBase.Turn<string>(row["Sponsor_Name"]),
+                            MemberCadre = DataBase.Turn<int>(row["MemberCadre"]),
+                            MemberAutopoolLevel = DataBase.Turn<int>(row["MemberAutopoolLevel"]),
+                            Sponsor_Cadre = DataBase.Turn<int>(row["Sponsor_Cadre"]),
+                            Sponsor_Autopool_Level = DataBase.Turn<int>(row["Sponsor_Autopool_Level"])
+                        });
+                    }
+                    dr.Close();
+                }
+                return new ApplicationResultModel() { Success = true, Result = memberRanks };
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
     }
 }

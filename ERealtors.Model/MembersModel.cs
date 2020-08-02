@@ -8,8 +8,9 @@ namespace ERealtors.Model
 {
     public class MembersModel
     {
+         public string ActionTaken { get; set; }
          public string Name { get; set; }
-         public int RefId { get; set; }
+         public string Gender { get; set; }
          public int plot_sqyds { get; set; }
          public int no_of_plots { get; set; }
          public int rate_per_plot { get; set; }
@@ -33,7 +34,16 @@ namespace ERealtors.Model
          public string IFSC_Code { get; set; }
          public string Bank_Account_Number { get; set; }
          public int IsOptingforStar1Autopool { get; set; }
-         public int UpgradeAmountPaid { get; set; }
+         public int IsAdmin { get; set; }
+        public int UpgradeAmountPaid { get; set; }
+         public string ImageUrl { get; set; }
 
+        public int Id { get; set; }
+        public string Guid { get; set; }
+        public string Member { get; set; }
+        public int Star { get; set; }
+        public string Sponser { get; set; }
+        public DateTime Join_Date { get; set; }
+        public int AutoPool { get; set; }
     }
 }

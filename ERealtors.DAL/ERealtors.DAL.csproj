@@ -54,6 +54,8 @@
   <ItemGroup>
     <Compile Include="MemberData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SettingData.cs" />
+    <Compile Include="VoucherData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

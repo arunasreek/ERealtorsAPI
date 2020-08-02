@@ -10,15 +10,15 @@ namespace ERealtors.BAL
 {
     public class MemberService
     {
-        public static ApplicationResultModel GetMemberList()
+        public static ApplicationResultModel GetMemberList(string Action, int? Id)
         {
-            var result = MemberData.GetMemberList();
+            var result = MemberData.GetMemberList(Action, Id);
             return new ApplicationResultModel() { Success = true, Result = result.Result };
         }
 
-        public static ApplicationResultModel GetMemberById(int memberId)
+        public static ApplicationResultModel GetMemberById(int memberId, string MonYear)
         {
-            var result = MemberData.GetMemberById(memberId);
+            var result = MemberData.GetMemberById(memberId, MonYear);
             return new ApplicationResultModel() { Success = true, Result = result.Result };
         }
 
@@ -31,7 +31,19 @@ namespace ERealtors.BAL
         public static ApplicationResultModel SetMemberData(MembersModel membersModel)
         {
             var result = MemberData.SetMemberData(membersModel);
-            return new ApplicationResultModel() { Success = true };
+            return new ApplicationResultModel() { Success = true, Result= result.Result };
+        }
+
+        public static ApplicationResultModel GetBusinessTransactions()
+        {
+            var result = MemberData.GetBusinessTransactions();
+            return new ApplicationResultModel() { Success = true, Result = result.Result };
+        }
+
+        public static ApplicationResultModel GetMemberRanks()
+        {
+            var result = MemberData.GetMemberRanks();
+            return new ApplicationResultModel() { Success = true, Result = result.Result };
         }
     }
 }

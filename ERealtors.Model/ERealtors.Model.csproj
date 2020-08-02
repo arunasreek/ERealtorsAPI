@@ -46,6 +46,7 @@
     <Compile Include="Class1.cs" />
     <Compile Include="MembersModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VoucherModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
